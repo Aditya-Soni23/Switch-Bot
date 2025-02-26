@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 LED Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .branding {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .branding img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .branding span {
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        h1, h3 {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
+        }
+        .on { background: #28a745; color: white; }
+        .off { background: #dc3545; color: white; }
+        .dance { background: #007bff; color: white; }
+        .stop { background: #ff9800; color: white; }
+
+        input[type="range"] {
+            width: 80%;
+            margin-top: 20px;
+            appearance: none;
+            height: 8px;
+            background: #ddd;
+            outline: none;
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Branding -->
+    <div class="branding">
+        <img src="diamond.jpg" alt="DiamondSoni Labs">
+        <span>Powered by DiamondSoni Labs</span>
+    </div>
+
+    <h1>ESP32 LED Control</h1>
+    <button class="on" onclick="sendCommand('on')">Turn ON</button>
+    <button class="off" onclick="sendCommand('off')">Turn OFF</button>
+
+    <h3>Brightness</h3>
+    <input type="range" min="0" max="255" value="128" id="brightnessSlider" oninput="updateBrightness(this.value)">
+    <p>Brightness: <span id="brightnessValue">128</span></p>
+
+    <h3>LED Dance Modes</h3>
+    <button class="dance" onclick="sendCommand('dance1')">Dance 1</button>
+    <button class="dance" onclick="sendCommand('dance2')">Dance 2</button>
+    <button class="dance" onclick="sendCommand('dance3')">Dance 3</button>
+    <button class="stop" onclick="sendCommand('stop')">Stop Dance</button>
+
+    <script>
+        const ESP32_IP = "http://192.168.0.8";  // Update with your ESP32 IP
+        
+        function sendCommand(cmd) {
+            fetch(`${ESP32_IP}/control?cmd=${cmd}`)
+                .then(response => response.text())
+                .then(data => console.log("ESP32 Response:", data))
+                .catch(error => console.error("Error:", error));
+        }
+
+        function updateBrightness(value) {
+            document.getElementById("brightnessValue").innerText = value;
+            fetch(`${ESP32_IP}/brightness?value=${value}`)
+                .then(response => response.text())
+                .then(data => console.log("Brightness Set:", data))
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
