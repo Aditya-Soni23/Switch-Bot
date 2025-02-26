@@ -101,7 +101,8 @@
     <button class="stop" onclick="sendCommand('stop')">Stop Dance</button>
 
     <script>
-        const ESP32_IP = "http://192.168.0.8";  // Update with your ESP32 IP
+        const ESP32_IP = "https://aditya-soni23.github.io/Switch-Bot/";
+        //const ESP32_IP = "http://192.168.0.8";  // Update with your ESP32 IP
         
         function sendCommand(cmd) {
             fetch(`${ESP32_IP}/control?cmd=${cmd}`)
